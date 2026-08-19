@@ -7,6 +7,7 @@ import com.tiendaDB.service.ProductoService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import jdk.swing.interop.SwingInterOpUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,6 +33,12 @@ public class PruebaService {
 //            System.out.println("================PRODUCTOS DE UN DETERMINADO RANGO DE PRECIO (900-2000)============");
 //            List<Producto> productos = productoService.consultarPorRango(new BigDecimal("900.00"), new BigDecimal("2000.00"));
 //            productos.forEach(p -> System.out.println("Nombre: " + p.getNombre()));
+            System.out.println("\n\n=============IMPRIMIENDO SIN JOIN FETCH=============");
+            categoriaService.imprimirReporte(false);
+            entityManager.clear();
+            System.out.println("\n\n=============IMPRIMIENDO CON JOIN FETCH=============");
+            categoriaService.imprimirReporte(true);
+
         }catch (IllegalArgumentException e){
             System.out.println("Validación fallida: " + e.getMessage());
         }catch (RuntimeException e){

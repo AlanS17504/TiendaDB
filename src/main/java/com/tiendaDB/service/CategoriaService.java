@@ -2,7 +2,10 @@ package com.tiendaDB.service;
 
 import com.tiendaDB.dao.CategoriaDAO;
 import com.tiendaDB.model.Categoria;
+import com.tiendaDB.model.Producto;
 import jakarta.persistence.EntityManager;
+
+import java.util.List;
 
 public class CategoriaService {
     private final EntityManager entityManager;
@@ -41,5 +44,23 @@ public class CategoriaService {
             throw new IllegalArgumentException("La categoría con ID " + id + " no fue encontrada.");
         }
         return categoria;
+    }
+
+    public void imprimirReporte(boolean usarJoinFetch){
+        System.out.println("===================CONSULTA OPTIMIZADA: " + usarJoinFetch + " =======================");
+        List<Categoria> categorias;
+        if(usarJoinFetch){
+            categorias = categoriaDAO.buscarTodasConProductos();
+        }
+        else{
+            categorias = categoriaDAO.buscarTodas();
+        }
+        for(Categoria categoria: categorias){
+            System.out.println("Categoría: " + categoria.getNombre());
+            for(Producto p: categoria.getProductos()){
+                System.out.println("Producto: " + p.getNombre() + "\t\tPrecio: " + p.getPrecio());
+            }
+        }
+        System.out.println("================FIN DEL REPORTE==================");
     }
 }
