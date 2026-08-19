@@ -20,6 +20,14 @@ public class ProductoService {
         this.categoriaDAO = new CategoriaDAO(entityManager);
     }
 
+    public Producto buscarPorId(Long id){
+        Producto producto = productoDAO.buscarPorId(id);
+        if(producto==null){
+            throw new IllegalArgumentException("Error, el producto con ID " + id + " no fue encontrado");
+        }
+        return producto;
+    }
+
     public void registrarProducto(String nombre, BigDecimal precio, Integer stock, Long categoriaId){
         //Reglas del negocio, las validaciones que debemos hacer antes de tocar a la base de datos
         if(precio.compareTo(BigDecimal.ZERO) <= 0){
@@ -51,12 +59,12 @@ public class ProductoService {
         if(nuevoPrecio.compareTo(BigDecimal.ZERO) <= 0){
             throw new IllegalArgumentException("El nuevo precio debe ser mayor que $0.");
         }
-        Producto producto = productoDAO.buscarPorId(productoId);
-        if(producto==null){
-            throw new IllegalArgumentException("Error, el producto con ID " + productoId + " no existe.");
-        }
         try{
             entityManager.getTransaction().begin();
+            Producto producto = productoDAO.buscarPorId(productoId);
+            if(producto==null){
+                throw new IllegalArgumentException("Error, el producto con ID " + productoId + " no existe.");
+            }
             producto.setPrecio(nuevoPrecio);
             entityManager.getTransaction().commit();
         }catch (Exception e){
